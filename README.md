@@ -35,7 +35,7 @@ Looker Studio Attack Map (Data Studio)
 
 ## Part 1: Create Honeypot VM
 Manage resources -> Create project -> "honeypot-lab"
-![screenshots](screenshots/scrn1)
+![screenshots](screenshots/scrn1.png)
 
 Enable Compute Engine and Cloud Logging APIs
 Create VM instance
