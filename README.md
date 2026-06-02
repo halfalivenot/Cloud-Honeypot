@@ -39,23 +39,23 @@ Manage resources -> Create project -> "honeypot-lab"
 
 Enable Compute Engine and Cloud Logging APIs
 Create VM instance
-![screenshots](screenshots/scrn2)
+![screenshots](screenshots/scrn2.png)
 Don't forget to enable "Install Ops Agent"
-![screenshots](screenshots/scrn3)
+![screenshots](screenshots/scrn3.png)
 I sucessfully logged into my VM remotely.
-![screenshots](screenshots/scrn4)
+![screenshots](screenshots/scrn4.png)
 
 ### Disble firewall
 Go to VPC -> Firewall -> Add firewall rule
 "Allow-all-ingress"
-![screenshots](screenshots/scrn5)
+![screenshots](screenshots/scrn5.png)
 
 Back in the Windows VM, I went to Windows Defender Firewall, click on Properties, and turned off the firewall for Domain Profile, Private Profile, and Public Profile. 
-![screenshots](screenshots/scrn6)
+![screenshots](screenshots/scrn6.png)
 
 ## Part 2: Testing and verifying logs
 I logged out of my Windows VM. I then failed three times as "employee" to login and then three more times as "admin." Afterwards, I logged in properly and checked what logs I've generated in Event Manager. 
-![screenshots](screenshots/scrn7)
+![screenshots](screenshots/scrn7.png)
 
 ## Part 3: Logging Pipeline and Configuration
 In the Windows VM, I went to the following path to configure the config.yaml file for Ops Agent. 
@@ -77,14 +77,14 @@ logging:
         receivers:
           - windows_security
 ```
-![screenshots](screenshots/scrn8)
+![screenshots](screenshots/scrn8.png)
 After saving my changes, I went to PowerShell as Administrator. I stop and start the service to ensure my changes occured.
 ```
 Stop-Service -Name "google-cloud-ops-agent" -Force
 Start-Service -Name "google-cloud-ops-agent"
 Get-Service -Name "google-cloud-ops-agent"
 ```
-![screenshots](screenshots/scrn8)
+![screenshots](screenshots/scrn8.png)
 
 Going to Monitoring -> Logs Explorer
 ```
@@ -92,18 +92,18 @@ resource.type="gce_instance"
 "4625"
 ```
 I verified that my logs were being properly pipelined. 
-![screenshots](screenshots/scrn9)
-![screenshots](screenshots/scrn10)
+![screenshots](screenshots/scrn9.png)
+![screenshots](screenshots/scrn10.png)
 
 ## Part 4: BigQuery Dataset, Configure Logs to go to this Dataset
 In BigQuery Studio, I create a dataset called "honeypot_logs"
-![screenshots](screenshots/scrn11)
+![screenshots](screenshots/scrn11.png)
 
 Back in Monitoring, I went to Log Router and Create Sink to send my Logs to my dataset.
-![screenshots](screenshots/scrn12)
+![screenshots](screenshots/scrn12.png)
 
 In BigQuery Studio, I verifiy if my logs went through.
-![screenshots](screenshots/scrn13)
+![screenshots](screenshots/scrn13.png)
 
 ## Part 5: GeoIP Database
 I downloaded GeoIP and uploaded to BigQuery Studio as a dataset "reference_data"
@@ -114,24 +114,24 @@ Upload: geoip_summarized.csv
 Create table: geoip
 Auto-Detect fields
 ```
-![screenshots](screenshots/scrn14)
+![screenshots](screenshots/scrn14.png)
 
 ## Part 6: Create queries and views
 failed logins query
-![screenshots](screenshots/scrn15)
+![screenshots](screenshots/scrn15.png)
 
 creating failed_logins
-![screenshots](screenshots/scrn16)
+![screenshots](screenshots/scrn16.png)
 
 enriched query
-![screenshots](screenshots/scrn17)
+![screenshots](screenshots/scrn17.png)
 
 creating enriched failed logins
-![screenshots](screenshots/scrn18)
+![screenshots](screenshots/scrn18.png)
 
 
 ## Part 7: Attack Map creation
-![screenshots](screenshots/scrn19)
+![screenshots](screenshots/scrn19.png)
 
 
 At this point, I decided to leave the VM on for a day to left it to attacked. 
