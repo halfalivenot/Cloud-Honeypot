@@ -175,6 +175,74 @@ latitude
 longitude
 ```
 
+
+Part 12 + 13
+failed logins query
+```
+SELECT
+  timestamp,
+  jsonPayload.computername AS host,
+  jsonPayload.eventid AS event_id,
+  jsonPayload.stringinserts[SAFE_OFFSET(19)] AS attacker_ip,
+  jsonPayload.message
+FROM `honeypot-lab-498217.honeypot_logs.windows_event_log_20260602`
+WHERE jsonPayload.eventid = 4625
+ORDER BY timestamp DESC;
+```
+creating failed_logins view
+```
+CREATE OR REPLACE VIEW `honeypot-lab-498217.honeypot_logs.failed_logins` AS
+SELECT
+  timestamp,
+  jsonPayload.computername AS hostname,
+  jsonPayload.eventid AS event_id,
+  jsonPayload.stringinserts[SAFE_OFFSET(19)] AS attacker_ip,
+  jsonPayload.message
+FROM `honeypot-lab-498217.honeypot_logs.windows_event_log_20260602`
+WHERE jsonPayload.eventid = 4625;
+```
+enriched query
+```
+WITH failed_logins AS (
+  SELECT
+    timestamp,
+    jsonPayload.computername AS host,
+    jsonPayload.stringinserts[SAFE_OFFSET(19)] AS attacker_ip
+  FROM `honeypot-lab-498217.honeypot_logs.windows_event_log_20260602`
+  WHERE CAST(jsonPayload.eventid AS INT64) = 4625
+),
+
+geoip AS (
+  SELECT
+    network,
+    countryname,
+    cityname,
+    latitude,
+    longitude,
+    NET.SAFE_IP_FROM_STRING(SPLIT(network, '/')[OFFSET(0)]) AS net_ip,
+    CAST(SPLIT(network, '/')[OFFSET(1)] AS INT64) AS prefix
+  FROM `honeypot-lab-498217.reference_data.geoip`
+)
+
+SELECT
+  f.timestamp,
+  f.host,
+  f.attacker_ip,
+  g.countryname,
+  g.cityname,
+  g.latitude,
+  g.longitude
+FROM failed_logins f
+JOIN geoip g
+ON NET.IP_TRUNC(NET.SAFE_IP_FROM_STRING(f.attacker_ip), 16) = g.net_ip
+ORDER BY f.timestamp DESC;
+```
+
+
+
+
+
+
 ## Part 12: Query Failed Logins
 Create a query for Event ID 4625.
 
