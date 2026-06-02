@@ -117,10 +117,21 @@ Auto-Detect fields
 ![screenshots](screenshots/scrn14)
 
 ## Part 6: Create queries and views
+failed logins query
+![screenshots](screenshots/scrn15)
+
+creating failed_logins
+![screenshots](screenshots/scrn16)
+
+enriched query
+![screenshots](screenshots/scrn17)
+
+creating enriched failed logins
+![screenshots](screenshots/scrn18)
 
 
 ## Part 7: Attack Map creation
-
+![screenshots](screenshots/scrn19)
 
 
 At this point, I decided to leave the VM on for a day to left it to attacked. 
@@ -308,7 +319,7 @@ FROM failed_logins f
 JOIN geoip g
 ON NET.IP_TRUNC(NET.SAFE_IP_FROM_STRING(f.attacker_ip), 16) = g.net_ip
 ORDER BY f.timestamp DESC;
-```
+```  
 
 
 
