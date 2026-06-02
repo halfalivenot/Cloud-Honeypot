@@ -84,7 +84,7 @@ Stop-Service -Name "google-cloud-ops-agent" -Force
 Start-Service -Name "google-cloud-ops-agent"
 Get-Service -Name "google-cloud-ops-agent"
 ```
-![screenshots](screenshots/scrn8.png)
+![screenshots](screenshots/scrn9.png)
 
 Going to Monitoring -> Logs Explorer
 ```
@@ -92,18 +92,18 @@ resource.type="gce_instance"
 "4625"
 ```
 I verified that my logs were being properly pipelined. 
-![screenshots](screenshots/scrn9.png)
 ![screenshots](screenshots/scrn10.png)
+![screenshots](screenshots/scrn11.png)
 
 ## Part 4: BigQuery Dataset, Configure Logs to go to this Dataset
 In BigQuery Studio, I create a dataset called "honeypot_logs"
-![screenshots](screenshots/scrn11.png)
-
-Back in Monitoring, I went to Log Router and Create Sink to send my Logs to my dataset.
 ![screenshots](screenshots/scrn12.png)
 
-In BigQuery Studio, I verifiy if my logs went through.
+Back in Monitoring, I went to Log Router and Create Sink to send my Logs to my dataset.
 ![screenshots](screenshots/scrn13.png)
+
+In BigQuery Studio, I verifiy if my logs went through.
+![screenshots](screenshots/scrn14.png)
 
 ## Part 5: GeoIP Database
 I downloaded GeoIP and uploaded to BigQuery Studio as a dataset "reference_data"
@@ -114,24 +114,24 @@ Upload: geoip_summarized.csv
 Create table: geoip
 Auto-Detect fields
 ```
-![screenshots](screenshots/scrn14.png)
+![screenshots](screenshots/scrn15.png)
 
 ## Part 6: Create queries and views
 failed logins query
-![screenshots](screenshots/scrn15.png)
-
-creating failed_logins
 ![screenshots](screenshots/scrn16.png)
 
-enriched query
+creating failed_logins
 ![screenshots](screenshots/scrn17.png)
 
-creating enriched failed logins
+enriched query
 ![screenshots](screenshots/scrn18.png)
+
+creating enriched failed logins
+![screenshots](screenshots/scrn19.png)
 
 
 ## Part 7: Attack Map creation
-![screenshots](screenshots/scrn19.png)
+![screenshots](screenshots/scrn20.png)
 
 
 At this point, I decided to leave the VM on for a day to left it to attacked. 
