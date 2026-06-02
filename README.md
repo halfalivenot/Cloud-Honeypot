@@ -123,15 +123,18 @@ failed logins query
 creating failed_logins
 ![screenshots](screenshots/scrn17.png)
 
-enriched query
+failed_logins
 ![screenshots](screenshots/scrn18.png)
 
-creating enriched failed logins
+enriched query
 ![screenshots](screenshots/scrn19.png)
+
+enriched failed logins view
+![screenshots](screenshots/scrn20.png)
 
 
 ## Part 7: Attack Map creation
-![screenshots](screenshots/scrn20.png)
+![screenshots](screenshots/scrn21.png)
 
 
 At this point, I decided to leave the VM on for a day to left it to attacked. 
