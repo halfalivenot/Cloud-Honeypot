@@ -3,29 +3,6 @@ Designed and deploy a honeypot in Google Cloud Platform.
 
 Create a VM, configure it access it to the public Internet, and allow it to run for an extended period of time. Log forwaring and failed login attacks to forward the logs into a repository, which is then connected to a SIEM. (Then be able to query from that SIEM and create an attack map that shows where all the attackers are from)
 
-|Azure Lab | GCP Equivalent |
-|---|----|
-|Azure VM | Compute Engine VM |
-|Network Security Group (NSG) | VPC Firewall Rules |
-|Windows Event Logs |Windows Event Logs |
-|Log Analytics Workspace (LAW) |Cloud Logging (Operations Suite) |
-|Microsoft Sentinel | Google Security Operations (Chronicle) or Cloud Logging + BigQuery|
-|KQL | Logging Query Language / BigQuery SQL |
-|Sentinel Watchlist | BigQuery reference table / Chroncicle reference list |
-| Sentinel Workbook | Looker Studio Dashboard / Chroncicle Dashboard |
-
-To do list:
-- Create a project
-- Create a VPC network
-- Configure VPC firewall rules (turn it off)
-- Create a VM (Windows 10)
-- Turn off firewall rules within Windows (Access it through RDP)
-- Ping from my computer to test
-- Attempt to fail to login into VM 
-- Go to VM Windows EventManager and see failed logins (Event ID: 4626)
-- Go to Cloud Logging
-- Connect Google Security Operations (Cloud-native SIEM)
-
 Skills Learned
 - Centralized logging
 - Security Event Analysis
@@ -50,10 +27,105 @@ Log Router Sink
 BigQuery
         │
         ▼
-GeoIP Enrichment
+GeoIP Enrichment 
         │
         ▼
-Looker Studio Attack Map
+Looker Studio Attack Map (Data Studio)
+
+
+## Part 1: Create Honeypot VM
+Manage resources -> Create project -> "honeypot-lab"
+![screenshots](screenshots/scrn1)
+
+Enable Compute Engine and Cloud Logging APIs
+Create VM instance
+![screenshots](screenshots/scrn2)
+Don't forget to enable "Install Ops Agent"
+![screenshots](screenshots/scrn3)
+I sucessfully logged into my VM remotely.
+![screenshots](screenshots/scrn4)
+
+### Disble firewall
+Go to VPC -> Firewall -> Add firewall rule
+"Allow-all-ingress"
+![screenshots](screenshots/scrn5)
+
+Back in the Windows VM, I went to Windows Defender Firewall, click on Properties, and turned off the firewall for Domain Profile, Private Profile, and Public Profile. 
+![screenshots](screenshots/scrn6)
+
+## Part 2: Testing and verifying logs
+I logged out of my Windows VM. I then failed three times as "employee" to login and then three more times as "admin." Afterwards, I logged in properly and checked what logs I've generated in Event Manager. 
+![screenshots](screenshots/scrn7)
+
+## Part 3: Logging Pipeline and Configuration
+In the Windows VM, I went to the following path to configure the config.yaml file for Ops Agent. 
+```
+C:\Program Files\Google\Cloud Operations\Ops Agent\config
+```
+In the config.yaml file, I added the following:
+```
+logging:
+  receivers:
+    windows_security:
+      type: windows_event_log
+      channels:
+        - Security
+
+  service:
+    pipelines:
+      security_pipeline:
+        receivers:
+          - windows_security
+```
+![screenshots](screenshots/scrn8)
+After saving my changes, I went to PowerShell as Administrator. I stop and start the service to ensure my changes occured.
+```
+Stop-Service -Name "google-cloud-ops-agent" -Force
+Start-Service -Name "google-cloud-ops-agent"
+Get-Service -Name "google-cloud-ops-agent"
+```
+![screenshots](screenshots/scrn8)
+
+Going to Monitoring -> Logs Explorer
+```
+resource.type="gce_instance"
+"4625"
+```
+I verified that my logs were being properly pipelined. 
+![screenshots](screenshots/scrn9)
+![screenshots](screenshots/scrn10)
+
+## Part 4: BigQuery Dataset, Configure Logs to go to this Dataset
+In BigQuery Studio, I create a dataset called "honeypot_logs"
+![screenshots](screenshots/scrn11)
+
+Back in Monitoring, I went to Log Router and Create Sink to send my Logs to my dataset.
+![screenshots](screenshots/scrn12)
+
+In BigQuery Studio, I verifiy if my logs went through.
+![screenshots](screenshots/scrn13)
+
+## Part 5: GeoIP Database
+I downloaded GeoIP and uploaded to BigQuery Studio as a dataset "reference_data"
+```
+BigQuery Studio
+Create dataset: reference_data
+Upload: geoip_summarized.csv
+Create table: geoip
+Auto-Detect fields
+```
+![screenshots](screenshots/scrn14)
+
+## Part 6: Create queries and views
+
+
+## Part 7: Attack Map creation
+
+
+
+At this point, I decided to leave the VM on for a day to left it to attacked. 
+
+
 
 ## Part 1: Create the project & Honeypot VM
 In GCP, enable Compute Engine, Cloud Logging API, etc.
