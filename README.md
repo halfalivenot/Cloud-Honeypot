@@ -47,7 +47,11 @@ I sucessfully logged into my VM remotely.
 
 ### Disble firewall
 Go to VPC -> Firewall -> Add firewall rule
-"Allow-all-ingress"
+Name: allow-all-ingress
+Direction: Ingress
+Source: 0.0.0.0/0
+Protocols: All
+Action: Allow
 ![screenshots](screenshots/scrn5.png)
 
 Back in the Windows VM, I went to Windows Defender Firewall, click on Properties, and turned off the firewall for Domain Profile, Private Profile, and Public Profile. 
@@ -187,6 +191,7 @@ ORDER BY total_attacks DESC;
 ```
 ![screenshots](screenshots/scrn23.png)
 
+In all likelihood, those top IPs are probably performing brute passwords attacks on my VM. 
 
 
 
