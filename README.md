@@ -1,15 +1,8 @@
 # Cloud-Honeypot
-Designed and deploy a honeypot in Google Cloud Platform, open it to the public Internet, log forwarding into a respository, and create an attack map of failed logins around the world. 
 
-Skills Learned
-- Centralized logging
-- Security Event Analysis
-- Querying
-- Enrichment
-- Threat Hunting
-- Attack Visualization
+Designed and deployed a public-facing Windows Server honeypot hosted on Google Cloud Platform (GCP). The objective was to expose the instance to global internet traffic, ingest authentication logs via the Google Cloud Ops Agent, route them into BigQuery for GeoIP data enrichment, and construct a live attack map using Data Studio. 
 
-Architecture
+Architecture Telemetry Diagram
 Internet Attackers
         │
         ▼
@@ -203,5 +196,8 @@ ORDER BY attacks DESC;
 ![screenshots](screenshots/scrn24.png)
 
 ## What I learned
-
-## Improvements
+- Centralized Logging
+- Attack Visualization
+- Enrichment
+- Querying
+- Threat Hunting
