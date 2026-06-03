@@ -1,7 +1,5 @@
 # Cloud-Honeypot
-Designed and deploy a honeypot in Google Cloud Platform.
-
-Create a VM, configure it access it to the public Internet, and allow it to run for an extended period of time. Log forwaring and failed login attacks to forward the logs into a repository, which is then connected to a SIEM. (Then be able to query from that SIEM and create an attack map that shows where all the attackers are from)
+Designed and deploy a honeypot in Google Cloud Platform, open it to the public Internet, log forwarding into a respository, and create an attack map of failed logins around the world. 
 
 Skills Learned
 - Centralized logging
