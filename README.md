@@ -2,26 +2,8 @@
 
 Designed and deployed a public-facing Windows Server honeypot hosted on Google Cloud Platform (GCP). The objective was to expose the instance to global internet traffic, ingest authentication logs via the Google Cloud Ops Agent, route them into BigQuery for GeoIP data enrichment, and construct a live attack map using Data Studio. 
 
-Architecture Telemetry Diagram
-Internet Attackers
-        │
-        ▼
-Windows Honeypot VM
-        │
-        ▼
-Cloud Logging
-        │
-        ▼
-Log Router Sink
-        │
-        ▼
-BigQuery
-        │
-        ▼
-GeoIP Enrichment 
-        │
-        ▼
-Looker Studio Attack Map (Data Studio)
+## Architecture Telemetry Diagram
+![diagrams](diagrams/honeypot_lab_diagram.png)
 
 
 ## Part 1: Create Honeypot VM
