@@ -138,7 +138,57 @@ enriched failed logins view
 
 At this point, I decided to leave the VM on for a day to left it to attacked.  
 
-Once I returned the following day, I checked on the map and saw about 13,000 attacks from a single country. When I went to my queries, I found out that I couldn't see logs from today at all. I figured out that my queries were only able to query from yesterday, and not also today. I changed them and my queries showed me today and yesterday's attacks. As well as on my attack map.   
+Once I returned the following day, I checked on the map and saw about 13,000 attacks from a single country. When I went to my queries, I found out that I couldn't see logs from today at all. I figured out that my queries were only able to query from yesterday, and not also today. I changed them and my queries showed me today and yesterday's attacks. As well as on my attack map.
+Here is my improved failed_logins
+```
+CREATE OR REPLACE VIEW `honeypot-lab-498217.honeypot_logs.failed_logins` AS
+SELECT
+  timestamp,
+  jsonPayload.computername AS hostname,
+  jsonPayload.eventid AS event_id,
+  jsonPayload.stringinserts[SAFE_OFFSET(19)] AS attacker_ip,
+  jsonPayload.message
+FROM `honeypot-lab-498217.honeypot_logs.windows_event_log_*`
+WHERE jsonPayload.eventid = 4625
+  AND _TABLE_SUFFIX BETWEEN FORMAT_DATE('%Y%m%d', DATE_SUB(CURRENT_DATE('UTC'), INTERVAL 1 DAY)) 
+                        AND FORMAT_DATE('%Y%m%d', CURRENT_DATE('UTC'));
+```
+Here is my improved enriched_failed_logins
+```
+CREATE OR REPLACE VIEW `honeypot-lab-498217.honeypot_logs.enriched_failed_logins` AS
+SELECT
+  f.timestamp,
+  f.hostname,
+  f.attacker_ip,
+  g.countryname,
+  g.cityname,
+  g.latitude,
+  g.longitude
+FROM `honeypot-lab-498217.honeypot_logs.failed_logins` f
+LEFT JOIN `honeypot-lab-498217.reference_data.geoip` g
+ON NET.IP_TRUNC(NET.SAFE_IP_FROM_STRING(f.attacker_ip), 16) = 
+   NET.IP_TRUNC(NET.SAFE_IP_FROM_STRING(SPLIT(g.network, '/')[OFFSET(0)]), 16);
+```
+Here is how my attack map looked: 
+![screenshots](screenshots/scrn22.png)
+
+## Part 8: Threat Hunting
+From the single day my Windows VM was opened to the Internet, it experienced about 50,000 failed login attempts all around the world. 
+
+I performed a SQL query to discover the top countries and their associated ips who attacked the most frequently my VM. 
+```
+SELECT
+  attacker_ip,
+  countryname,
+  COUNT(*) AS total_attacks
+FROM `honeypot-lab-498217.honeypot_logs.enriched_failed_logins`
+GROUP BY attacker_ip, countryname
+ORDER BY total_attacks DESC;
+```
+![screenshots](screenshots/scrn23.png)
+
+
+
 
 ### Creating failed_logins  
 ```
