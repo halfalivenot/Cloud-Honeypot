@@ -83,6 +83,7 @@ In BigQuery Studio, I verifiy if my logs went through.
 ![screenshots](screenshots/scrn14.png)
 
 ## Part 5: GeoIP Database
+https://raw.githubusercontent.com/joshmadakor1/lognpacific-public/refs/heads/main/misc/geoip-summarized.csv 
 I downloaded GeoIP and uploaded to BigQuery Studio as a dataset "reference_data"
 ```
 BigQuery Studio
