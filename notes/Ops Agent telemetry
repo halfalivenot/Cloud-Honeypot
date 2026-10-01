@@ -1,0 +1,15 @@
+If on Ops Agent, you see a yellow warning with the following:  
+"The Ops Agent can be installed but may be lacking permissions to send telemetry. Please choose a different Service Account or add the necessary IAM roles."  
+
+What you're going to do is go to
+IAM & Admin -> Service Accounts -> Create service account
+Name: windows-ops-agent
+ID: windows-ops-agent
+
+Grant the following permission:
+- Logs Writer
+- Logs Bucker
+- Monitoring Metric Writer
+
+Back to creating the vm, choose Service Account, choose that one you just created:
+Back to Ops agent, a yellow warning no longer should be there. 
